@@ -1,0 +1,73 @@
+<circuit version="1.1.0-SR2" rev="260312" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="0" >
+
+<item itemtype="Hd44780" CircId="Hd44780-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-248,-96" rotation="0" hflip="1" vflip="1" label="Hd44780-1" idLabPos="70,-82" labelrot="0" valLabPos="-16,20" valLabRot="0" Rows="2" Cols="16" />
+
+<item itemtype="MCU" CircId="8051-2" mainComp="false" Show_id="true" Show_Val="false" Pos="-88,-24" rotation="0" hflip="1" vflip="1" label="8051-2" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="12 MHz" Program="../../../../../Projects/Digital Clock by 8051/Objects/digital clock.hex" Auto_Load="false" MainMcu="true" SerialMon="-1" />
+
+<item itemtype="DS1307" CircId="DS1307-3" mainComp="false" Show_id="false" Show_Val="false" Pos="120,-20" rotation="0" hflip="1" vflip="1" label="DS1307-3" idLabPos="-20,-34" labelrot="0" valLabPos="-16,20" valLabRot="0" Time_Updtd="true" />
+
+<item itemtype="Resistor" CircId="Resistor-4" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="32,-72" rotation="0" hflip="1" vflip="1" label="Resistor-4" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="10 kΩ" />
+
+<item itemtype="Resistor" CircId="Resistor-5" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="52,8" rotation="0" hflip="1" vflip="1" label="Resistor-5" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="10 kΩ" />
+
+<item itemtype="Resistor" CircId="Resistor-6" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="-304,-48" rotation="0" hflip="1" vflip="1" label="Resistor-6" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="10 kΩ" />
+
+<item itemtype="Fixed Voltage" CircId="Fixed Voltage-9" mainComp="false" Show_id="false" Show_Val="false" Pos="84,-72" rotation="0" hflip="-1" vflip="1" label="Fixed Voltage-9" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Voltage="5 V" Out="true" />
+
+<item itemtype="Fixed Voltage" CircId="Fixed Voltage-10" mainComp="false" Show_id="false" Show_Val="false" Pos="96,36" rotation="0" hflip="-1" vflip="1" label="Fixed Voltage-10" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Voltage="5 V" Out="true" />
+
+<item itemtype="Ground" CircId="Ground-11" mainComp="false" Show_id="false" Show_Val="false" Pos="-340,-16" rotation="0" hflip="1" vflip="1" label="Ground-11" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Ground" CircId="Ground-13" mainComp="false" Show_id="false" Show_Val="false" Pos="-132,36" rotation="0" hflip="1" vflip="1" label="Ground-13" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Fixed Voltage" CircId="Fixed Voltage-14" mainComp="false" Show_id="false" Show_Val="false" Pos="8,56" rotation="0" hflip="-1" vflip="1" label="Fixed Voltage-14" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Voltage="5 V" Out="true" />
+
+<item itemtype="Node" CircId="Node-7" mainComp="false" Pos="20,-24" />
+
+<item itemtype="Node" CircId="Node-8" mainComp="false" Pos="8,-32" />
+
+<item itemtype="Connector" uid="Connector-1" startpinid="Hd44780-1-dataPin7" endpinid="8051-2-PORT37" pointList="-152,-88,-152,112,-96,112" />
+
+<item itemtype="Connector" uid="Connector-2" startpinid="Hd44780-1-dataPin6" endpinid="8051-2-PORT36" pointList="-160,-88,-160,104,-96,104" />
+
+<item itemtype="Connector" uid="Connector-3" startpinid="Hd44780-1-dataPin5" endpinid="8051-2-PORT35" pointList="-168,-88,-168,96,-96,96" />
+
+<item itemtype="Connector" uid="Connector-4" startpinid="Hd44780-1-dataPin4" endpinid="8051-2-PORT34" pointList="-176,-88,-176,88,-96,88" />
+
+<item itemtype="Connector" uid="Connector-5" startpinid="Hd44780-1-dataPin3" endpinid="8051-2-PORT33" pointList="-184,-88,-184,80,-96,80" />
+
+<item itemtype="Connector" uid="Connector-6" startpinid="Hd44780-1-dataPin2" endpinid="8051-2-PORT32" pointList="-192,-88,-192,72,-96,72" />
+
+<item itemtype="Connector" uid="Connector-7" startpinid="Hd44780-1-dataPin1" endpinid="8051-2-PORT31" pointList="-200,-88,-200,64,-96,64" />
+
+<item itemtype="Connector" uid="Connector-8" startpinid="Hd44780-1-dataPin0" endpinid="8051-2-PORT30" pointList="-208,-88,-208,56,-96,56" />
+
+<item itemtype="Connector" uid="Connector-11" startpinid="Resistor-5-lPin" endpinid="Node-7-1" pointList="36,8,20,8,20,-24" />
+
+<item itemtype="Connector" uid="Connector-12" startpinid="DS1307-3-PinSCL" endpinid="Node-7-0" pointList="84,-24,20,-24" />
+
+<item itemtype="Connector" uid="Connector-13" startpinid="Node-7-2" endpinid="8051-2-PORT01" pointList="20,-24,4,-24,4,0,-32,0" />
+
+<item itemtype="Connector" uid="Connector-14" startpinid="Resistor-4-lPin" endpinid="Node-8-1" pointList="16,-72,8,-72,8,-32" />
+
+<item itemtype="Connector" uid="Connector-15" startpinid="DS1307-3-PinSDA" endpinid="Node-8-0" pointList="84,-32,8,-32" />
+
+<item itemtype="Connector" uid="Connector-16" startpinid="Node-8-2" endpinid="8051-2-PORT00" pointList="8,-32,-8,-32,-8,-8,-32,-8" />
+
+<item itemtype="Connector" uid="Connector-17" startpinid="Fixed Voltage-9-outnod" endpinid="Resistor-4-rPin" pointList="68,-72,48,-72" />
+
+<item itemtype="Connector" uid="Connector-18" startpinid="Fixed Voltage-10-outnod" endpinid="Resistor-5-rPin" pointList="80,36,68,36,68,8" />
+
+<item itemtype="Connector" uid="Connector-19" startpinid="Hd44780-1-PinRW" endpinid="Resistor-6-rPin" pointList="-224,-88,-224,-48,-288,-48" />
+
+<item itemtype="Connector" uid="Connector-20" startpinid="Resistor-6-lPin" endpinid="Ground-11-Gnd" pointList="-320,-48,-340,-48,-340,-32" />
+
+<item itemtype="Connector" uid="Connector-27" startpinid="8051-2-RST" endpinid="Ground-13-Gnd" pointList="-96,48,-108,48,-108,4,-132,4,-132,20" />
+
+<item itemtype="Connector" uid="Connector-28" startpinid="8051-2-PORTEEA" endpinid="Fixed Voltage-14-outnod" pointList="-32,56,-8,56" />
+
+<item itemtype="Connector" uid="Connector-33" startpinid="Hd44780-1-PinEn" endpinid="8051-2-PORT21" pointList="-216,-88,-216,152,-16,152,-16,128,-32,128" />
+
+<item itemtype="Connector" uid="Connector-34" startpinid="Hd44780-1-PinRS" endpinid="8051-2-PORT20" pointList="-232,-88,-232,168,0,168,0,136,-32,136" />
+
+</circuit>

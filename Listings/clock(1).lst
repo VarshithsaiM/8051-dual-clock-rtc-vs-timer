@@ -1,0 +1,180 @@
+C51 COMPILER V9.60.7.0   CLOCK_1_                                                          09/21/2026 05:30:21 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE CLOCK_1_
+OBJECT MODULE PLACED IN .\Objects\clock(1).obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE C:\Transferred files\clock(1).c ROM(SMALL) OPTIMIZE(8,SPEED) BROWSE DEBU
+                    -G OBJECTEXTEND PRINT(.\Listings\clock(1).lst) TABS(2) OBJECT(.\Objects\clock(1).obj)
+
+line level    source
+
+   1          /*
+   2           * 8051 Digital Clock (software clock, no RTC needed)
+   3           * Compiler : SDCC (works inside MCU 8051 IDE)
+   4           * Crystal  : 12 MHz
+   5           */
+   6          
+   7          #include <8051.h>
+*** WARNING C318 IN LINE 7 OF C:\Transferred files\clock(1).c: can't open file '8051.h'
+   8          
+   9          #define LCD_DATA  P3
+  10          #define RS        P2_0
+  11          #define EN        P2_1
+  12          #define BTN_HR    P1_0
+  13          #define BTN_MIN   P1_1
+  14          
+  15          /* start time */
+  16          volatile unsigned char hours = 12, minutes = 0, seconds = 0;
+  17          volatile unsigned char ticks = 0;
+  18          volatile unsigned char tick_flag = 1;
+  19          
+  20          void delay_ms(unsigned int ms)
+  21          {
+  22   1          unsigned int i, j;
+  23   1          for (i = 0; i < ms; i++)
+  24   1              for (j = 0; j < 120; j++)
+  25   1                  ;
+  26   1      }
+  27          
+  28          void lcd_cmd(unsigned char cmd)
+  29          {
+  30   1          RS = 0;
+*** ERROR C202 IN LINE 30 OF C:\Transferred files\clock(1).c: 'P2_0': undefined identifier
+  31   1          LCD_DATA = cmd;
+*** ERROR C202 IN LINE 31 OF C:\Transferred files\clock(1).c: 'P3': undefined identifier
+  32   1          EN = 1;
+*** ERROR C202 IN LINE 32 OF C:\Transferred files\clock(1).c: 'P2_1': undefined identifier
+  33   1          delay_ms(1);
+  34   1          EN = 0;
+*** ERROR C202 IN LINE 34 OF C:\Transferred files\clock(1).c: 'P2_1': undefined identifier
+  35   1          delay_ms(2);
+  36   1      }
+  37          
+  38          void lcd_data(unsigned char d)
+  39          {
+  40   1          RS = 1;
+*** ERROR C202 IN LINE 40 OF C:\Transferred files\clock(1).c: 'P2_0': undefined identifier
+  41   1          LCD_DATA = d;
+*** ERROR C202 IN LINE 41 OF C:\Transferred files\clock(1).c: 'P3': undefined identifier
+  42   1          EN = 1;
+*** ERROR C202 IN LINE 42 OF C:\Transferred files\clock(1).c: 'P2_1': undefined identifier
+  43   1          delay_ms(1);
+  44   1          EN = 0;
+*** ERROR C202 IN LINE 44 OF C:\Transferred files\clock(1).c: 'P2_1': undefined identifier
+  45   1          delay_ms(2);
+C51 COMPILER V9.60.7.0   CLOCK_1_                                                          09/21/2026 05:30:21 PAGE 2   
+
+  46   1      }
+  47          
+  48          void lcd_init(void)
+  49          {
+  50   1          delay_ms(20);
+  51   1          lcd_cmd(0x38);   /* 8-bit, 2 lines, 5x7 */
+  52   1          lcd_cmd(0x0C);   /* display on, cursor off */
+  53   1          lcd_cmd(0x06);   /* auto-increment cursor */
+  54   1          lcd_cmd(0x01);   /* clear */
+  55   1      }
+  56          
+  57          void lcd_print(const char *s)
+  58          {
+  59   1          while (*s)
+  60   1              lcd_data(*s++);
+  61   1      }
+  62          
+  63          void lcd_two_digits(unsigned char n)
+  64          {
+  65   1          lcd_data('0' + n / 10);
+  66   1          lcd_data('0' + n % 10);
+  67   1      }
+  68          
+  69          void show_time(void)
+  70          {
+  71   1          unsigned char h, m, s;
+  72   1      
+  73   1          EA = 0;                 /* take a consistent snapshot */
+*** ERROR C202 IN LINE 73 OF C:\Transferred files\clock(1).c: 'EA': undefined identifier
+  74   1          h = hours; m = minutes; s = seconds;
+  75   1          EA = 1;
+*** ERROR C202 IN LINE 75 OF C:\Transferred files\clock(1).c: 'EA': undefined identifier
+  76   1      
+  77   1          lcd_cmd(0x80);          /* line 1, column 0 */
+  78   1          lcd_print("Time ");
+  79   1          lcd_two_digits(h);
+  80   1          lcd_data(':');
+  81   1          lcd_two_digits(m);
+  82   1          lcd_data(':');
+  83   1          lcd_two_digits(s);
+  84   1      }
+  85          
+  86          /* Timer0 overflows every 50 ms; 20 overflows = 1 second */
+  87          void timer0_isr(void) __interrupt(1)
+*** ERROR C141 IN LINE 87 OF C:\Transferred files\clock(1).c: syntax error near '1', expected 'bit'
+  88          {
+*** ERROR C132 IN LINE 88 OF C:\Transferred files\clock(1).c: '__interrupt': not in formal parameter list
+*** ERROR C141 IN LINE 88 OF C:\Transferred files\clock(1).c: syntax error near '{', expected ';'
+  89              TH0 = 0x3C;             /* 65536 - 50000 = 0x3CB0 */
+*** ERROR C244 IN LINE 89 OF C:\Transferred files\clock(1).c: 'TH0': can't initialize, bad type or class
+*** ERROR C132 IN LINE 89 OF C:\Transferred files\clock(1).c: 'TH0': not in formal parameter list
+  90              TL0 = 0xB0;
+*** ERROR C244 IN LINE 90 OF C:\Transferred files\clock(1).c: 'TL0': can't initialize, bad type or class
+*** ERROR C132 IN LINE 90 OF C:\Transferred files\clock(1).c: 'TL0': not in formal parameter list
+  91          
+  92              if (++ticks >= 20) {
+*** ERROR C141 IN LINE 92 OF C:\Transferred files\clock(1).c: syntax error near 'if', expected 'hdata'
+*** ERROR C141 IN LINE 92 OF C:\Transferred files\clock(1).c: syntax error near '++', expected 'hdata'
+*** ERROR C129 IN LINE 92 OF C:\Transferred files\clock(1).c: missing ';' before '>='
+  93                  ticks = 0;
+  94                  if (++seconds >= 60) {
+  95                      seconds = 0;
+C51 COMPILER V9.60.7.0   CLOCK_1_                                                          09/21/2026 05:30:21 PAGE 3   
+
+  96                      if (++minutes >= 60) {
+  97                          minutes = 0;
+  98                          if (++hours >= 24)
+  99                              hours = 0;
+ 100                      }
+ 101                  }
+ 102                  tick_flag = 1;
+ 103              }
+ 104          }
+ 105          
+ 106          void main(void)
+ 107          {
+ 108              BTN_HR  = 1;            /* inputs */
+ 109              BTN_MIN = 1;
+ 110          
+ 111              lcd_init();
+ 112          
+ 113              TMOD = 0x01;            /* Timer0, mode 1 (16-bit) */
+ 114              TH0  = 0x3C;
+ 115              TL0  = 0xB0;
+ 116              ET0  = 1;
+ 117              EA   = 1;
+ 118              TR0  = 1;
+ 119          
+ 120              while (1) {
+ 121                  if (tick_flag) {
+ 122                      tick_flag = 0;
+ 123                      show_time();
+ 124                  }
+ 125          
+ 126                  if (!BTN_HR) {
+ 127                      delay_ms(200);
+ 128                      EA = 0;
+ 129                      if (++hours >= 24) hours = 0;
+ 130                      EA = 1;
+ 131                      tick_flag = 1;
+ 132                  }
+ 133          
+ 134                  if (!BTN_MIN) {
+ 135                      delay_ms(200);
+ 136                      EA = 0;
+ 137                      if (++minutes >= 60) minutes = 0;
+ 138                      seconds = 0;
+ 139                      EA = 1;
+ 140                      tick_flag = 1;
+ 141                  }
+ 142              }
+ 143          }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  20 ERROR(S)

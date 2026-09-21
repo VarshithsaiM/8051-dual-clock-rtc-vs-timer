@@ -1,0 +1,171 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              09/21/2026 05:42:03 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /*
+   2           * 8051 Digital Clock (software clock, no RTC needed)
+   3           * Crystal  : 12 MHz
+   4           */
+   5          
+   6          #include <reg51.h>
+   7          
+   8          sbit RS      = P2^0;
+   9          sbit EN      = P2^1;
+  10          sbit BTN_HR  = P1^0;
+  11          sbit BTN_MIN = P1^1;
+  12          
+  13          #define LCD_DATA  P3
+  14          
+  15          /* start time */
+  16          volatile unsigned char hours = 12, minutes = 0, seconds = 0;
+  17          volatile unsigned char ticks = 0;
+  18          volatile unsigned char tick_flag = 1;
+  19          
+  20          void delay_ms(unsigned int ms)
+  21          {
+  22   1          unsigned int i, j;
+  23   1          for (i = 0; i < ms; i++)
+  24   1              for (j = 0; j < 120; j++)
+  25   1                  ;
+  26   1      }
+  27          
+  28          void lcd_cmd(unsigned char cmd)
+  29          {
+  30   1          RS = 0;
+  31   1          LCD_DATA = cmd;
+  32   1          EN = 1;
+  33   1          delay_ms(1);
+  34   1          EN = 0;
+  35   1          delay_ms(2);
+  36   1      }
+  37          
+  38          void lcd_data(unsigned char d)
+  39          {
+  40   1          RS = 1;
+  41   1          LCD_DATA = d;
+  42   1          EN = 1;
+  43   1          delay_ms(1);
+  44   1          EN = 0;
+  45   1          delay_ms(2);
+  46   1      }
+  47          
+  48          void lcd_init(void)
+  49          {
+  50   1          delay_ms(20);
+  51   1          lcd_cmd(0x38);   /* 8-bit, 2 lines, 5x7 */
+  52   1          lcd_cmd(0x0C);   /* display on, cursor off */
+  53   1          lcd_cmd(0x06);   /* auto-increment cursor */
+  54   1          lcd_cmd(0x01);   /* clear */
+C51 COMPILER V9.60.7.0   MAIN                                                              09/21/2026 05:42:03 PAGE 2   
+
+  55   1      }
+  56          
+  57          void lcd_print(const char *s)
+  58          {
+  59   1          while (*s)
+  60   1              lcd_data(*s++);
+  61   1      }
+  62          
+  63          void lcd_two_digits(unsigned char n)
+  64          {
+  65   1          lcd_data('0' + n / 10);
+  66   1          lcd_data('0' + n % 10);
+  67   1      }
+  68          
+  69          void show_time(void)
+  70          {
+  71   1          unsigned char h, m, s;
+  72   1      
+  73   1          EA = 0;                 /* take a consistent snapshot */
+  74   1          h = hours; m = minutes; s = seconds;
+  75   1          EA = 1;
+  76   1      
+  77   1          lcd_cmd(0x80);          /* line 1, column 0 */
+  78   1          lcd_print("Time ");
+  79   1          lcd_two_digits(h);
+  80   1          lcd_data(':');
+  81   1          lcd_two_digits(m);
+  82   1          lcd_data(':');
+  83   1          lcd_two_digits(s);
+  84   1      }
+  85          
+  86          /* Timer0 overflows every 50 ms; 20 overflows = 1 second */
+  87          void timer0_isr(void) interrupt 1
+  88          {
+  89   1          TH0 = 0x3C;             /* 65536 - 50000 = 0x3CB0 */
+  90   1          TL0 = 0xB0;
+  91   1      
+  92   1          if (++ticks >= 20) {
+  93   2              ticks = 0;
+  94   2              if (++seconds >= 60) {
+  95   3                  seconds = 0;
+  96   3                  if (++minutes >= 60) {
+  97   4                      minutes = 0;
+  98   4                      if (++hours >= 24)
+  99   4                          hours = 0;
+ 100   4                  }
+ 101   3              }
+ 102   2              tick_flag = 1;
+ 103   2          }
+ 104   1      }
+ 105          
+ 106          void main(void)
+ 107          {
+ 108   1          BTN_HR  = 1;            /* inputs */
+ 109   1          BTN_MIN = 1;
+ 110   1      
+ 111   1          lcd_init();
+ 112   1      
+ 113   1          TMOD = 0x01;            /* Timer0, mode 1 (16-bit) */
+ 114   1          TH0  = 0x3C;
+ 115   1          TL0  = 0xB0;
+ 116   1          ET0  = 1;
+C51 COMPILER V9.60.7.0   MAIN                                                              09/21/2026 05:42:03 PAGE 3   
+
+ 117   1          EA   = 1;
+ 118   1          TR0  = 1;
+ 119   1      
+ 120   1          while (1) {
+ 121   2              if (tick_flag) {
+ 122   3                  tick_flag = 0;
+ 123   3                  show_time();
+ 124   3              }
+ 125   2      
+ 126   2              if (!BTN_HR) {
+ 127   3                  delay_ms(200);
+ 128   3                  EA = 0;
+ 129   3                  if (++hours >= 24) hours = 0;
+ 130   3                  EA = 1;
+ 131   3                  tick_flag = 1;
+ 132   3              }
+ 133   2      
+ 134   2              if (!BTN_MIN) {
+ 135   3                  delay_ms(200);
+ 136   3                  EA = 0;
+ 137   3                  if (++minutes >= 60) minutes = 0;
+ 138   3                  seconds = 0;
+ 139   3                  EA = 1;
+ 140   3                  tick_flag = 1;
+ 141   3              }
+ 142   2          }
+ 143   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    375    ----
+   CONSTANT SIZE    =      6    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

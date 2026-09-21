@@ -1,0 +1,1 @@
+"clock.c" ROM(SMALL) OPTIMIZE (9,SIZE) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\clock.lst) TABS (2) OBJECT(.\Objects\clock.obj)
