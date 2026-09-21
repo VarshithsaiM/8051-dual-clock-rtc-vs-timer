@@ -81,35 +81,6 @@ Assuming a standard $11.0592\text{ MHz}$ oscillator:
   $$\text{TH0} = \text{0x4C},\quad \text{TL0} = \text{0x00}$$
 - An ISR tick accumulator counts 20 iterations to mark 1 elapsed second.
 
----
-
-## 📂 Repository Organization
-
-```text
-├── docs/
-│   └── schematics/
-│       ├── v1-rtc-clock.png
-│       ├── v2-timer-buttons.png
-│       ├── v1-rtc-clock.simu
-│       └── v2-timer-buttons.simu
-├── v1-rtc/
-│   ├── src/
-│   │   ├── main.c
-│   │   ├── i2c.c / i2c.h         # Bit-bang I2C on P0.0 (SDA) and P0.1 (SCL)
-│   │   ├── ds1307.c / ds1307.h   # BCD read/write driver
-│   │   └── lcd8bit.c / lcd8bit.h # 8-bit parallel LCD driver (Port 3 + Port 2)
-│   └── keil/                     # Keil project files (.uvproj, .hex)
-├── v2-timer-buttons/
-│   ├── src/
-│   │   ├── main.c
-│   │   ├── timer.c / timer.h     # Timer 0 ISR initialization & reload
-│   │   ├── button.c / button.h   # Debounce logic for P1.0 & P1.1
-│   │   └── lcd8bit.c / lcd8bit.h # Reused 8-bit LCD driver
-│   └── keil/                     # Keil project files (.uvproj, .hex)
-└── README.md
-```
-
----
 
 ## 🚀 Build & Simulation Steps
 
