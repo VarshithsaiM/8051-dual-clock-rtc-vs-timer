@@ -22,8 +22,7 @@ Both versions are implemented targeting the **AT89C51 / AT89S52**, developed in 
 
 An autonomous timekeeping circuit offloading timing generation to an external I²C RTC module. The MCU executes bit-banged I²C transactions across open-drain Port 0 pins pulled up to VCC with $10\text{ k}\Omega$ bus resistors.
 
-![Version 1: RTC Hardware Schematic](docs/schematics/v1-rtc-clock.png)
-*(Reference: Screenshot (23).png)*
+![Version 1: RTC Hardware Schematic](schematics/v1-rtc-clock.png)
 
 #### Pin Connections & Interfacing:
 - **Display (HD44780 LCD - 8-Bit Bus):**
@@ -42,8 +41,7 @@ An autonomous timekeeping circuit offloading timing generation to an external I�
 
 A minimalist BOM design eliminating external timing silicon. Time generation is driven internally by 8051 Timer interrupts, while two active-low tactile switches provide user adjustment (e.g., Mode/Select and Increment).
 
-![Version 2: Timer and Buttons Schematic](docs/schematics/v2-timer-buttons.png)
-*(Reference: Screenshot (26).png)*
+![Version 2: Timer and Buttons Schematic](schematics/v2-timer-buttons.png)
 
 #### Pin Connections & Interfacing:
 - **Display (HD44780 LCD - 8-Bit Bus):**
